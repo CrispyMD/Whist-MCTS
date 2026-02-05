@@ -54,10 +54,14 @@ class TicTacToe(Game):
         
         return 0
     
-    def apply_move(self, row, column):
+    def apply_move_rc(self, row, column):
         # assumes move is legal
         self.board[row][column] = self.current_player
         self.current_player = -self.current_player
+    
+    def apply_move(self, move):
+        self.apply_move_rc(move[0], move[1])
+
     
     def get_legal_moves(self):
         legal_moves = []
@@ -66,3 +70,12 @@ class TicTacToe(Game):
                 if self.board[i][j] == 0:
                     legal_moves.append((i, j))
         return legal_moves
+    
+
+    def print_board(self):
+        symbol = {1: "X", -1: "O", 0: " "}
+        for i in range(3):
+            row = " | ".join(symbol[self.board[i][j]] for j in range(3))
+            print(row)
+            if i < 2:
+                print("-" * 9)
