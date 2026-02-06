@@ -20,3 +20,7 @@ class Game(ABC):
     @abstractmethod
     def get_result(self):
         pass
+
+    @abstractmethod
+    def get_current_state(self):
+        pass

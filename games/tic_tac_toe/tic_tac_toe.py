@@ -71,6 +71,9 @@ class TicTacToe(Game):
                     legal_moves.append((i, j))
         return legal_moves
     
+    def get_current_state(self):
+        return [[self.board[i][j] for i in range(3)] for j in range(3)]
+
 
     def print_board(self):
         symbol = {1: "X", -1: "O", 0: " "}
