@@ -11,13 +11,13 @@ class MCTS:
         start_time = perf_counter() + duration
         iterations = 0
         current_state = self.game.get_current_state()
-        root = node(current_state)
+        root = node.node(current_state)
 
         while (perf_counter() - start_time) < duration:
-            leaf = selection(root)
-            root_of_expansion = expansion(leaf) #TODO: Add logic of if leaf is terminal
-            result = rollout(root_of_expansion)
-            backpropagation(root_of_expansion, result)
+            leaf = selection.selection(root)
+            root_of_expansion = expansion.expansion(leaf) #TODO: Add logic of if leaf is terminal
+            result = rollout.rollout(root_of_expansion)
+            backpropagation.back_propagation(root_of_expansion, result)
             iterations += 1
 
         best_move = root.get_best_move()
