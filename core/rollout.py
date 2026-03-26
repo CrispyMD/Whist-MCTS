@@ -1,8 +1,12 @@
-from core.node import node
-from math import log, sqrt
+from games.game import  State
+from random import choice
 
-def rollout(rollout_node: node):
+def rollout(state: State) -> int:
     '''
-    parameter rollout_node is the start of the rollout
+    :param state: The starting state of the rollout
+    Returns list of scores
     '''
-    pass
+    while not state.is_terminal_state():
+        random_move = choice(state.get_legal_moves())
+        state.apply_move(random_move)
+    return state.get_result()

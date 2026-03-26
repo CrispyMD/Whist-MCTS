@@ -1,34 +1,54 @@
 from core.node import node
 from math import log, sqrt
+from games.game import State, Game
 
-def selection(current_node: node):
+C = sqrt(2)
+
+def selection(current_node: node, current_state: State) -> tuple[node, State, int]:
+    '''
+    Returns a pointer to the selected node,
+    the state it is representing, and the player whose turn
+    it is from return_node
+    '''
+
+    number_of_players = len(current_node.scores)
+    current_player = Game.get_current_player()
     return_node = current_node
+    return_state = current_state
     while not return_node.is_leaf():
-        return_node = select_highest_value_child(return_node)
-    return current_node
+        if return_node.untried_moves_exist():
+            return return_node, return_state
 
-def select_highest_value_child(current_node: node):
+        return_node, return_state = select_highest_value_child(return_node, return_state, current_player)
+        current_player = (current_player + 1) % number_of_players
+    return (return_node, return_state)
+
+
+
+
+def select_highest_value_child(current_node: node, current_state: State, current_player: int) -> tuple[node, State]:
     '''
-    assuming current_node is not a leaf
+    assuming current_node has no untried moves 
     '''
 
-    if current_node.untried_moves: #untried moves list is not empty
-        move = current_node.untried_moves[0]
-        return current_node.children[move]
-
+    
     max_node = current_node.children[0]
-    max_value = upper_confidence_bound(max_node)
+    max_value = upper_confidence_bound(max_node, current_player)
     for child in current_node.children[1:]:
-        if (ucb:=upper_confidence_bound(child)) > max_value:
+        if (ucb:=upper_confidence_bound(child, current_player)) > max_value:
             max_value = ucb
             max_node = child
-    return max_node
+    current_state.apply_move(max_node.move)
+    return max_node, current_state
 
-def upper_confidence_bound(current_node: node):
+
+
+
+def upper_confidence_bound(current_node: node, current_player: int) -> float:
     '''
     Calculates UCB value for current node
     '''
-    c = sqrt(2)
-    exploitation = current_node.wins / current_node.playouts
-    exploration = c * sqrt(log(current_node.parent.playouts / current_node.playouts))
+    
+    exploitation = current_node.scores[current_player] / current_node.visits
+    exploration = C * sqrt(log(current_node.parent.visits / current_node.visits))
     return exploration + exploitation
