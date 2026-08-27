@@ -1,7 +1,7 @@
 from games.game import  State
 from random import choice
 
-def rollout(state: State) -> int:
+def rollout(state: State):
     '''
     :param state: The starting state of the rollout
     Returns list of scores

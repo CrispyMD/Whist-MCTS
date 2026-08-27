@@ -12,7 +12,7 @@ def selection(current_node: node, current_state: State) -> tuple[node, State, in
     '''
 
     number_of_players = len(current_node.scores)
-    current_player = Game.get_current_player()
+    current_player = current_state.get_current_player()
     return_node = current_node
     return_state = current_state
     while not return_node.is_leaf():
@@ -30,12 +30,14 @@ def select_highest_value_child(current_node: node, current_state: State, current
     '''
     assuming current_node has no untried moves 
     '''
-
     
-    max_node = current_node.children[0]
-    max_value = upper_confidence_bound(max_node, current_player)
-    for child in current_node.children[1:]:
-        if (ucb:=upper_confidence_bound(child, current_player)) > max_value:
+    max_node = None
+    max_value = -1
+    for child in current_node.children.values():
+        if max_value == -1:
+            max_node = child
+            max_value = upper_confidence_bound(max_node, current_player)
+        elif (ucb:=upper_confidence_bound(child, current_player)) > max_value:
             max_value = ucb
             max_node = child
     current_state.apply_move(max_node.move)
@@ -50,5 +52,5 @@ def upper_confidence_bound(current_node: node, current_player: int) -> float:
     '''
     
     exploitation = current_node.scores[current_player] / current_node.visits
-    exploration = C * sqrt(log(current_node.parent.visits / current_node.visits))
+    exploration = C * sqrt(log(current_node.parent.visits) / current_node.visits)
     return exploration + exploitation

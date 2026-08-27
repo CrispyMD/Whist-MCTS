@@ -1,5 +1,5 @@
 from core.node import node
-from random import choice
+from random import randint
 
 def expansion(leaf: node):
     '''
@@ -9,5 +9,7 @@ def expansion(leaf: node):
     Up to mcts.py to check if ndoe is terminal
     '''
 
-    chosen_move = choice(leaf.untried_moves)
+    random_index = randint(0, len(leaf.untried_moves) - 1)
+    chosen_move = leaf.untried_moves[random_index]
+    leaf.untried_moves.pop(random_index)
     return chosen_move

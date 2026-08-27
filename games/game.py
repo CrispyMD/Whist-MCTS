@@ -5,7 +5,10 @@ class Game(ABC):
     methods that refer to the current state of the game
     '''
     @abstractmethod
-    def current_player(self):
+    def current_player(self) -> int:
+        '''
+        In {0, 1, ..., number_of_players}
+        '''
         pass
 
     @abstractmethod
@@ -32,12 +35,6 @@ class Game(ABC):
     def normalize_score(self, score: float):
         pass
 
-    @abstractmethod
-    def get_current_player(self) -> int:
-        '''
-        An integer in [0, number_of_players)
-        '''
-        pass
 
     @abstractmethod
     def get_number_of_players(self) -> int:
@@ -47,7 +44,7 @@ class Game(ABC):
 
 class State(ABC):
     @abstractmethod
-    def current_player(self):
+    def get_current_player(self):
         pass
     
     @abstractmethod

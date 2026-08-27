@@ -1,4 +1,3 @@
-from games.game import Game
 from random import choice
 
 class RandomAgent:

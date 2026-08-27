@@ -1,32 +1,35 @@
 from games.game import Game
 from games.tic_tac_toe.tic_tac_toe import TicTacToe
-from agents.random_agent import RandomAgent
+from agents.mcts_agent import mcts_agent
+from games.tic_tac_toe.tic_tac_toe import number_to_position
 
-def num_to_pos(n):
-    if n < 1 or n > 9:
-        raise ValueError("n must be between 1 and 9")
-    
-    n -= 1  # make it 0-based
-    row = n // 3
-    col = n % 3
-    return (row, col)
 
 
 game = TicTacToe()
-agent = RandomAgent(game)
+agent = mcts_agent(game)
 
 while not game.is_terminal_state():
     print("Enter current move: ")
 
-    user_move = num_to_pos(int(input()))
-    game.apply_move(user_move)
+    user_move = number_to_position(int(input()))
+    print(user_move, "####")
+    game.apply_move_rc(user_move[0], user_move[1])
 
+    game.print_board()
+    print(game.state.board)
     if game.is_terminal_state():
         break
 
     agent.make_move()
     game.print_board()
+    if game.is_terminal_state():
+            break
 
 print("********************************")
-print(f"Winner is {game.get_result()}. Final board state is:")
+result = game.get_result()[0]
+if result == 0.5:
+    print("Draw. ", end="")
+else:
+     print(f"Winner is {'X' if game.get_result()[0] == 1 else 'O'}. ", end="")
+print("Final board state is:")
 game.print_board()
